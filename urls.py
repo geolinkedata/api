@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from oaks_rest_api import views
+#from django.conf import settings
 
 urlpatterns = patterns('',
     url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
@@ -26,7 +27,9 @@ urlpatterns = patterns('',
     url(r'^v1/geo/users/$', views.UserList.as_view()),
     url(r'^v1/geo/users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
 
-    url(r'^v1/geo/current-user/$', views.CurrentUser.as_view())
+    url(r'^v1/geo/current-user/$', views.CurrentUser.as_view()),
+
+    #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.UPLOAD_SHAPE,})
 
 
 )

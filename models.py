@@ -1,11 +1,10 @@
 """API Models for oaks_rest_api application"""
 from django.db import models
 from django.conf import settings
-from django.core.files.storage import FileSystemStorage
 import binascii
 import os
 from hashlib import sha1
-
+from django.core.files.storage import FileSystemStorage
 
 #required params for triplegeo
 TGEO_PARAMS = {
@@ -37,12 +36,12 @@ TGEO_STORE_FORMATS = (
 )
 
 class ShapeFile(models.Model):
-    fs = FileSystemStorage(location=settings.BASE_STORAGE)
-    
-    shp = models.FileField(upload_to=settings.UPLOAD_SHAPE, storage=fs, max_length=200)
-    dbf = models.FileField(upload_to=settings.UPLOAD_SHAPE, storage=fs, max_length=200)
-    shx = models.FileField(upload_to=settings.UPLOAD_SHAPE, storage=fs, max_length=200)
-    prj = models.FileField(upload_to=settings.UPLOAD_SHAPE, storage=fs, max_length=200,blank=True, null=True)
+    upload_storage = FileSystemStorage(location='/var/www/oaks-data')
+
+    shp = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
+    dbf = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
+    shx = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
+    prj = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
 
     owner = models.ForeignKey('auth.User', related_name='shapefiles')
 
@@ -55,11 +54,10 @@ class ShapeFile(models.Model):
 
 
 class TripleStore(models.Model):
-    fs = FileSystemStorage(location=settings.BASE_STORAGE)
-    
+
     format_file = models.CharField(max_length=9, choices=TGEO_STORE_FORMATS, null=True)
     target_store = models.CharField(max_length=200,
-                                    default=TGEO_PARAMS['target_store'])
+                                    default=TGEO_PARAMS['target_store'], null=True)
     feature_string = models.CharField(max_length=200, blank=True, null=True)
     attribute = models.CharField(max_length=200, blank=True, null=True)
     type_wkt = models.CharField(max_length=12, choices=TGEO_WKT_OBJECTS, null=True, blank=True)
@@ -83,7 +81,7 @@ class TripleStore(models.Model):
     input_file = models.CharField(max_length=400, blank=True, null=True)
 
     #output_file = models.CharField(max_length=400, blank=True)
-    output_file = models.FileField(upload_to=settings.UPLOAD_TRIPLE_STORE, storage=fs,
+    output_file = models.FileField(upload_to=settings.UPLOAD_TRIPLE_STORE,
                                    max_length=200, blank=True, null=True)
 
     shp = models.ManyToManyField(ShapeFile)

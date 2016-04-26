@@ -21,10 +21,8 @@ def get_shp_from_zip(zip_file):
     except BadZipfile:
         return None
     list_names = zip_f.namelist()
-    #delete any dir containing shape file:
-    list_names = filter(None, [x[x.rfind('/')+1:] for x in list_names]) 
     d = {}
-    for elem in list_names:                
+    for elem in list_names:
         t = elem.split('.')
         d[t[1].lower()] = t[0]
         ll = d.values()
@@ -59,7 +57,6 @@ def zip_files(files, zip_name):
    # s = cStringIO.StringIO()
 #    zip_file = ZipFile(s, 'w')
     zip_name = zip_name+'.zip'
-    print zip_name
     zip_file = ZipFile(zip_name, 'w')
     files_len = len(files)
     #counter for not found files in list arg
