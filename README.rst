@@ -1,9 +1,7 @@
-Oaks Rest Api
-========================
+Geolinkedata REST API
+=====================
 
-
-Oaks Rest Api is a Django app to provide rest api for Oaks project.
-
+Geolinkedata REST API is a Django app to provide restful api for the project Geolinkedata.
 
 Requirements
 ------------
@@ -12,12 +10,11 @@ It requires geogit. Install it with:
 
 .. code-block:: bash
 
-  git clone http://github.com/boundlessgeo/GeoGit.git
+  git clone https://github.com/locationtech/geogig.git
 
-  cd geogit/src/parent
+  cd geogig/src/parent
 
   mvn clean install
-
 
 and these python packages:
  
@@ -29,15 +26,12 @@ and these python packages:
 
   pip install django-rest-swagger
 
-  pip install geogit-py
-
-
+  pip install geogig-py
 
 Settings
 --------
 - Append required apps to ``INSTALLED_APPS`` var in your **settings.py**:
-
-        
+      
 .. code-block:: python
 
       INSTALLED_APPS = (
@@ -48,7 +42,7 @@ Settings
         'rest_framework_swagger',
         'provider',
         'provider.oauth2',        
-        'oaks_rest_api',
+        'api',
       )
  
 - and add these variables in the same file:
@@ -106,12 +100,11 @@ Settings
     
     python manage.py syncdb
   
-  
-- Start geogit with:
+- Start geogig with:
 
 .. code-block:: bash
     
-    geogit-gateway
+    geogig-gateway
   
   
 
