@@ -1,4 +1,4 @@
-"""API Models for oaks_rest_api application"""
+"""API Models for GeoLinkeData api application"""
 from django.db import models
 from django.conf import settings
 import binascii
@@ -36,7 +36,7 @@ TGEO_STORE_FORMATS = (
 )
 
 class ShapeFile(models.Model):
-    upload_storage = FileSystemStorage(location='/var/www/oaks-data')
+    upload_storage = FileSystemStorage(location='/var/www/geolinkedata-data')
 
     shp = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
     dbf = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)

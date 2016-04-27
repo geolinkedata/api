@@ -1,19 +1,19 @@
-"""API Views for oaks_rest_api application."""
-from oaks_rest_api.models import ShapeFile, TripleStore, NodeToken, \
+"""API Views for GeoLinkeData api application."""
+from api.models import ShapeFile, TripleStore, NodeToken, \
     TGEO_STORE_FORMATS
-from oaks_rest_api.serializers import *
+from api.serializers import *
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status, generics
 from django.http import HttpResponse
-from oaks_rest_api.tgeo import rename_params
+from api.tgeo import rename_params
 from django.conf import settings
-from oaks_rest_api.utils import *
+from api.utils import *
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from oaks_rest_api.node import post_node_server
-from oaks_rest_api.git import Git
+from api.node import post_node_server
+from api.git import Git
 from os.path import basename, splitext, isdir
 from zipfile import BadZipfile
 
@@ -41,15 +41,14 @@ def download_file(file, file_name):
         return Response({'detail': 'file not found'},
                         status=status.HTTP_404_NOT_FOUND)
 
-                        
+
 def download_file_url(file_path):
     """
     Creates link url file resource
-    """  
-    file_path = file_path.replace('/var/www/', '') 
+    """
+    file_path = file_path.replace('/var/www/', '')
     url = settings.SITEURL+file_path
-    return Response({'file': url},
-                        status=status.HTTP_200_OK)
+    return Response({'file': url}, status=status.HTTP_200_OK)
 
 
 def save_ckan_resource(id_shp, params):
@@ -58,15 +57,13 @@ def save_ckan_resource(id_shp, params):
     """
     #check api_key
     #if api_key.is_valid():  
-    if params.has_key('ckan_api_key') and params.has_key('ckan_id'):      
-      CkanResource.objects.create(api_key=params['ckan_api_key'], 
-				id_resource=params['ckan_id'], 
-				shp_id=id_shp)
+    if params.has_key('ckan_api_key') and params.has_key('ckan_id'):
+      CkanResource.objects.create(api_key=params['ckan_api_key'], id_resource=params['ckan_id'], shp_id=id_shp)
       params.pop('ckan_api_key')				  
       params.pop('ckan_id')
-      
+
 #def save_geonode_resource(id_shp, ):
-  
+
 
 class ShapeList(APIView):
     """
@@ -75,18 +72,18 @@ class ShapeList(APIView):
     throttle_scope = 'default'
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated, )
-    
+
     def save_shp(self, shape_file, user):
-	"""
-	Saves a shape file on server
-	"""
-	shp = shape_file['shp']
-	shx = shape_file['shx']
-	dbf = shape_file['dbf']
-	prj = shape_file['prj']
-	file_saved = ShapeFile.objects.create(shp=shp, shx=shx, dbf=dbf, prj=prj,
-					      owner=user)
-	return file_saved
+    	"""
+        Saves a shape file on server
+        """
+        shp = shape_file['shp']
+        shx = shape_file['shx']
+        dbf = shape_file['dbf']
+        prj = shape_file['prj']
+        file_saved = ShapeFile.objects.create(shp=shp, shx=shx, dbf=dbf, prj=prj,
+            owner=user)
+        return file_saved
 
     def pre_save(self, obj):
         obj.owner = self.request.user
@@ -102,176 +99,173 @@ class ShapeList(APIView):
     def post(self, request):
         """
         uploads a  shape file
-        type -- base, all        
-	---	
-	omit_serializer: true	
-	consumes: ["multipart/form-data"]
-	parameters:
-	    - name: shp
-	      type: file
-	      required: true
-	      paramType: form
-	    - name: shx
-	      type: file
-	      required: true
-	      paramType: form
-	    - name: dbf
-	      type: file
-	      required: true
-	      paramType: form
-	    - name: prj
-	      type: file
-	      required: true	
-	      paramType: form	   
-	    - name: type_wkt
-	      type: string
-	      required: false
-	      paramType: form
-	    - name: format_file
-	      type: string
-	      required: false
-	      paramType: form	
-	      defaultValue: rdf
-	    - name: target_store
-	      type: string
-	      required: false
-	      paramType: form
-	      defaultValue: 'GeoSparql'
-	    - name: feature_string
-	      type: string
-	      required: false
-	      paramType: form	  
-	    - name: attribute
-	      type: string
-	      required: false
-	      paramType: form	
-	    - name: ignore
-	      type: string
-	      required: false
-	      paramType: form	
-	      defaultValue: 'UNK'
-	    - name: name
-	      type: string
-	      required: false
-	      paramType: form
-	    - name: class_store
-	      type: string
-	      required: true
-	      paramType: form	
-	    - name: ns_URI
-	      type: string
-	      required: false
-	      paramType: form
-	    - name: ns_prefix
-	      type: string
-	      required: false
-	      paramType: form	  
-	    - name: ontology_NS
-	      type: string
-	      required: false
-	      paramType: form	 
-	    - name: ontology_NS_prefix
-	      type: string
-	      required: false
-	      defaultValue: 'geo'
-	      paramType: form	
-	    - name: default_lang
-	      type: string
-	      required: false
-	      paramType: form	
-	      defaultValue: 'en'
-	    - name: output_file
-	      type: string
-	      required: false
-	      paramType: form	 
-	    - name: commit_msg
-	      type: string
-	      required: false
-	      paramType: form	
-	    - name: ckan_api_key
-	      type: string
-	      required: false
-	      paramType: form
-	    - name: ckan_id
-	      type: string
-	      required: false
-	      paramType: form	      
+        type -- base, all
+        ---
+    	omit_serializer: true	
+    	consumes: ["multipart/form-data"]
+    	parameters:
+    	    - name: shp
+    	      type: file
+    	      required: true
+    	      paramType: form
+    	    - name: shx
+    	      type: file
+    	      required: true
+    	      paramType: form
+    	    - name: dbf
+    	      type: file
+    	      required: true
+    	      paramType: form
+    	    - name: prj
+    	      type: file
+    	      required: true	
+    	      paramType: form	   
+    	    - name: type_wkt
+    	      type: string
+    	      required: false
+    	      paramType: form
+    	    - name: format_file
+    	      type: string
+    	      required: false
+    	      paramType: form	
+    	      defaultValue: rdf
+    	    - name: target_store
+    	      type: string
+    	      required: false
+    	      paramType: form
+    	      defaultValue: 'GeoSparql'
+    	    - name: feature_string
+    	      type: string
+    	      required: false
+    	      paramType: form	  
+    	    - name: attribute
+    	      type: string
+    	      required: false
+    	      paramType: form	
+    	    - name: ignore
+    	      type: string
+    	      required: false
+    	      paramType: form	
+    	      defaultValue: 'UNK'
+    	    - name: name
+    	      type: string
+    	      required: false
+    	      paramType: form
+    	    - name: class_store
+    	      type: string
+    	      required: true
+    	      paramType: form	
+    	    - name: ns_URI
+    	      type: string
+    	      required: false
+    	      paramType: form
+    	    - name: ns_prefix
+    	      type: string
+    	      required: false
+    	      paramType: form	  
+    	    - name: ontology_NS
+    	      type: string
+    	      required: false
+    	      paramType: form	 
+    	    - name: ontology_NS_prefix
+    	      type: string
+    	      required: false
+    	      defaultValue: 'geo'
+    	      paramType: form	
+    	    - name: default_lang
+    	      type: string
+    	      required: false
+    	      paramType: form	
+    	      defaultValue: 'en'
+    	    - name: output_file
+    	      type: string
+    	      required: false
+    	      paramType: form	 
+    	    - name: commit_msg
+    	      type: string
+    	      required: false
+    	      paramType: form	
+    	    - name: ckan_api_key
+    	      type: string
+    	      required: false
+    	      paramType: form
+    	    - name: ckan_id
+    	      type: string
+    	      required: false
+    	      paramType: form	      
         """
         params = request.DATA.dict()
-        
-	def process(file_shp, params, store_in_semantic_db=False):
-	   
-		    
-	    #create auth token
-	    token = NodeToken.objects.create(user=self.request.user)
-	    
-	    
-		    
-	    if store_in_semantic_db:
-	      	#params = request.DATA.dict()
-	        params['input_file'] = file_shp.shp.name
-	        
-		pos = params['input_file'].rfind('/')
-		params['feature_string'] = params['input_file'] \
-			    [pos+1:-4]
 
-		params['output_file'] = settings.UPLOAD_TRIPLE_STORE+ \
-			    '/'+params['feature_string']+'.'+params['format_file']
-		params['owner'] = self.request.user
+    def process(file_shp, params, store_in_semantic_db=False):
 
-		  #create commit message for geogit
-		  #if params.has_key('commit_msg'):
-		  #if params['commit_msg'] != '':
-		      #commit_msg = params['commit_msg']
-		  #else:
-		      #commit_msg = 'shape file '+ \
-			  #params['feature_string']+' imported.'
-		      #params.pop('commit_msg')
-		  #else:
-		  #return Response({'commit_msg':["This query parameter is required."]},
-			      #status=status.HTTP_400_BAD_REQUEST)
-		      
-		      #TODO:: vedi se possibile togliere triple_store		     
-		triple_store = TripleStore.objects.create(**params)
-		triple_store.shp.add(file_shp)
-		  
-		params = rename_params(params)                                                                     
+        #create auth token
+        token = NodeToken.objects.create(user=self.request.user)
 
-		  #call geogit and commit uploaded shp
-		  #geogit = Git(owner=self.request.user)
-		  #geogit.push(shp=file_shp.shp.name, commit_msg=commit_msg)
+        if store_in_semantic_db:
+          	#params = request.DATA.dict()
+        params['input_file'] = file_shp.shp.name
+
+        pos = params['input_file'].rfind('/')
+        params['feature_string'] = params['input_file'] \
+        [pos+1:-4]
+
+        params['output_file'] = settings.UPLOAD_TRIPLE_STORE+ \
+                '/'+params['feature_string']+'.'+params['format_file']
+        params['owner'] = self.request.user
+
+          #create commit message for geogit
+          #if params.has_key('commit_msg'):
+          #if params['commit_msg'] != '':
+              #commit_msg = params['commit_msg']
+          #else:
+              #commit_msg = 'shape file '+ \
+              #params['feature_string']+' imported.'
+              #params.pop('commit_msg')
+          #else:
+          #return Response({'commit_msg':["This query parameter is required."]},
+                  #status=status.HTTP_400_BAD_REQUEST)
+
+              #TODO:: vedi se possibile togliere triple_store		     
+        triple_store = TripleStore.objects.create(**params)
+        triple_store.shp.add(file_shp)
+
+        params = rename_params(params)
+
+          #call geogit and commit uploaded shp
+          #geogit = Git(owner=self.request.user)
+          #geogit.push(shp=file_shp.shp.name, commit_msg=commit_msg)
 
 
 
-		result = post_node_server(data=params, token=token, url='/loadShape')
-	    else:
-		result = post_node_server(data={'input_file': file_shp.shp.name
-					       },
-					       token=token, url='/loadShpInGeonode')
-					       
-	    return Response({'detail': result['details']}, 
-			  status=result['status'])
-	      
-	    #if result == True:
-		#return Response({'detail': result['details'], status=result['status'])
-	    #else:
-		#return Response({'detail': result}, status=status.HTTP_200_OK)
-     
-      
+        result = post_node_server(data=params, token=token, url='/loadShape')
+        else:
+        result = post_node_server(data={'input_file': file_shp.shp.name
+                           },
+                           token=token, url='/loadShpInGeonode')
+
+        return Response({'detail': result['details']}, 
+              status=result['status'])
+
+        #if result == True:
+        #return Response({'detail': result['details'], status=result['status'])
+        #else:
+        #return Response({'detail': result}, status=status.HTTP_200_OK)
+
+
         if request.QUERY_PARAMS.has_key('type'):
             upload_type = request.QUERY_PARAMS['type'].lower()
             create_dir(settings.UPLOAD_SHAPE)
             shape_serializer = ShapeFileSerializer(data=request.FILES)
-            
-            if upload_type == 'base':            
+
+            if upload_type == 'base':
                 if shape_serializer.is_valid():
                     file_shp = self.save_shp(request.FILES, self.request.user)
-		    save_ckan_resource(file_shp.id, params)  
+            save_ckan_resource(file_shp.id, params)  
                     return process(file_shp, params, store_in_semantic_db=False)
                 elif u'zip' in request.FILES:
                     f = get_shp_from_zip(request.FILES['zip'])
                     if f:
-                        file_shp = self.save_shp(f, self.request.user)                        
+                        file_shp = self.save_shp(f, self.request.user)
                         return process(file_shp, params, store_in_semantic_db=False)
                     else:
                       return Response(shape_serializer.errors,
@@ -281,7 +275,7 @@ class ShapeList(APIView):
                                     status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 	      
             elif upload_type == 'all':                
-                if shape_serializer.is_valid():		  
+                if shape_serializer.is_valid():
                     triple_store_serializer = TripleStoreSerializer(
                         data=request.DATA)
                     if triple_store_serializer.is_valid():
@@ -471,7 +465,7 @@ class TripleStoreList(APIView):
         """
         Uploads a triple store file on server and store in semantic db
         ---
-	#serializer: oaks_rest_api.serializers.TripleStoreSerializer	
+	#serializer: api.serializers.TripleStoreSerializer	
 	#omit_serializer: true	
 	consumes: ["multipart/form-data"]
 	parameters:

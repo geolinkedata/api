@@ -1,5 +1,5 @@
 """TGeo code for triplegeo-service utilization"""
-from oaks_rest_api.models import TGEO_STORE_FORMATS
+from api.models import TGEO_STORE_FORMATS
 import re
 
 
@@ -23,25 +23,25 @@ def rename_params(params):
         if '_' in k:
             params[to_camelcase(k)] = v
             params.pop(k)
-          
+
     params['job'] = 'file'
     params['format'] = [t for v, t in TGEO_STORE_FORMATS if
                              v == params['formatFile']][0] #TODO::controllo su formato valido!
     file_extension = '.'+params['formatFile'].lower()
     params.pop('formatFile')
-    
+
     if params.has_key('typeWkt'):
       params['type'] = params['typeWkt']
       params.pop('typeWkt')
     else:
       params['type'] = 'point'
-  
+
     if params.has_key('classStore'):
       params['class'] = params['classStore']
       params.pop('classStore')
     else:
       params['class'] = ''
-      
+
     params['nsPrefix'] = ''
 
     return params

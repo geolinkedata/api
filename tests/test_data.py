@@ -1,8 +1,8 @@
 from rest_framework.test import APITestCase
 from rest_framework.test import APIRequestFactory, APIClient, \
     force_authenticate
-from oaks_rest_api import views
-from oaks_rest_api.tests.common import setup_user
+from api import views
+from api.tests.common import setup_user
 
 
 class TestDataViews(APITestCase):

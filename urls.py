@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
-from oaks_rest_api import views
+from api import views
 #from django.conf import settings
 
 urlpatterns = patterns('',

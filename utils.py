@@ -1,4 +1,4 @@
-"""API utils for oaks_rest_api application"""
+"""API utils for GeoLinkeData api application"""
 from zipfile import ZipFile, BadZipfile
 import cStringIO
 import StringIO
@@ -30,8 +30,7 @@ def get_shp_from_zip(zip_file):
     if all(x == ll[0] for x in ll):
         k = d.keys()
         #shp file  type validation
-        if len(k) == 4 and ('shp' in k and 'dbf' in k and 'shx' in k
-                            and 'prj' in k):
+        if len(k) == 4 and ('shp' in k and 'dbf' in k and 'shx' in k and 'prj' in k):
             res = {}
         for name in zip_f.namelist():
             io = StringIO.StringIO()
@@ -84,15 +83,15 @@ def zip_files(files, zip_name):
             #file not found
             file_not_found_count += 1
     zip_file.close()
-        
+
 
     #returns zip files string if there are files in zip,
     #None, otherwise.
-    
-    if files_len > file_not_found_count:        
-	return None
+
+    if files_len > file_not_found_count:
+	   return None
     else:
-	delete_file(zip_name)
+	   delete_file(zip_name)
 	raise BadZipfile('Zip file not valid!')
       
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from oaks_rest_api.models import *
+from api.models import *
 from django.core.validators import URLValidator
 from django.contrib.auth.models import User
 
