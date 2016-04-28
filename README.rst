@@ -73,7 +73,7 @@ Usage
 
 .. code-block:: console
 
-    pip install git+file:///<LOCAL_PATH>/api@master
+    pip install -e git+file:///<LOCAL_PATH>/api@master
 
 - Append required apps to ``INSTALLED_APPS`` var in your **settings.py**:
       
