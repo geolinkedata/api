@@ -6,7 +6,7 @@ Geolinkedata REST API is a Django app to provide restful api for the project Geo
 Requirements
 ------------
 
-It requires geogit. Install it with:
+It requires geogig. Install it with:
 
 .. code-block:: bash
 
@@ -16,16 +16,46 @@ It requires geogit. Install it with:
 
   mvn clean install
 
-and these python packages:
+It is recommended to isolate the development in a virtual environment. For example you can use `pyenv`_ and install the plugin `pyenv-virtualenv`_ 
+
+.. _pyenv-virtualenv: https://github.com/yyuu/pyenv-virtualenv
+
+.. _pyenv: https://github.com/yyuu/pyenv
+
+Development
+-----------
+
+Create a virtual enviroment with the specified version of *python*:
+
+.. code-block:: console
+
+    pyenv install 2.7.11
+    pyenv virtualenv 2.7.11 geolinkedata
+
+Enter the virtual enviroment:
+
+.. code-block:: console
+
+    eval "$(pyenv init -)"
+    pyenv shell geolinkedata
+    pyenv activate geolinkedata
+
+Firsty install the required *Django* version supported by `GeoNode`_ for compatibility.
+
+.. _GeoNode:  http://geonode.org
+
+.. code-block:: console
+
+    pip install django==1.8.7
+    pip freeze > requirements.txt
+
+and install these python packages:
  
 .. code-block:: bash
 
   pip install djangorestframework
-
   pip install django-oauth2-provider
-
   pip install django-rest-swagger
-
   pip install geogig-py
 
 Settings
@@ -45,7 +75,7 @@ Settings
         'api',
       )
  
-- and add these variables in the same file:
+- add these variables in the same file:
 
 .. code-block:: python
   
@@ -94,7 +124,7 @@ Settings
     "is_superuser": False,  
   }
   
-- Create the rest_api db tables:
+- Create the api db tables:
 
 .. code-block:: bash
     
