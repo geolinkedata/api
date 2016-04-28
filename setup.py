@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name='api',
     version='0.2',
-    packages=['geolod-api'],
+    packages=find_packages(),
     include_package_data=True,
     license='GPL License',  # example license
     description='A rest api for GeoLinkeData project.',
@@ -22,13 +22,13 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GPL License', # example license
+        'License :: OSI Approved :: GPL License',  # example license
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         # Replace these appropriately if you are stuck on Python 2.
         'Programming Language :: Python :: 2.7',
-        #'Programming Language :: Python :: 3.2',
-        #'Programming Language :: Python :: 3.3',
+        # 'Programming Language :: Python :: 3.2',
+        # 'Programming Language :: Python :: 3.3',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
