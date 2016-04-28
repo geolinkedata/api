@@ -4,8 +4,8 @@ from api import views
 # from django.conf import settings
 
 urlpatterns = patterns('',
-    url(r'^oauth2/',
-        include('provider.oauth2.urls', namespace='oauth2')),
+    url(r'^o/',
+        include('oauth2_provider.urls', namespace='oauth2_provider')),
     url(r'^v1/geo/api-auth/',
         include('rest_framework.urls', namespace='rest_framework')),
 

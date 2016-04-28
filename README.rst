@@ -55,7 +55,7 @@ and install these python packages:
 .. code-block:: bash
 
   pip install djangorestframework
-  pip install django-oauth2-provider
+  pip install django-oauth-toolkit
   pip install django-rest-swagger
   pip install geogig-py
 
@@ -86,7 +86,7 @@ Usage
         'rest_framework',
         'rest_framework_swagger',
         'provider',
-        'provider.oauth2',        
+        'oauth2_provider',       
         'api',
       )
  
@@ -105,13 +105,12 @@ Usage
           (
               'rest_framework.authentication.BasicAuthentication',
               'rest_framework.authentication.SessionAuthentication',
-              'rest_framework.authentication.OAuth2Authentication',
+              'oauth2_provider.ext.rest_framework.OAuth2Authentication',
           ),
       'DEFAULT_RENDERER_CLASSES':
           (
               'rest_framework.renderers.BrowsableAPIRenderer',
               'rest_framework.renderers.JSONRenderer',
-              'rest_framework.renderers.XMLRenderer',
           ),
       'DEFAULT_THROTTLE_CLASSES':
           (
