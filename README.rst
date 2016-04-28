@@ -62,12 +62,18 @@ and install these python packages:
 Usage
 -----
 
-- Start a new Django project:
+- Start a new Django project in the same virtual enviroment:
 
 .. code-block:: console
 
     mkdir usage
     django-admin startproject tutorial .
+
+- Install the api application from the repository:
+
+.. code-block:: console
+
+    pip install git+file:///<LOCAL_PATH>/api@master
 
 - Append required apps to ``INSTALLED_APPS`` var in your **settings.py**:
       
@@ -119,7 +125,7 @@ Usage
           }
   }
 
-  #rest swagger config
+  # rest swagger config
   SWAGGER_SETTINGS = {
       "exclude_namespaces": [],
       "api_version": '1.0',
