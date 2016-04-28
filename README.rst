@@ -73,7 +73,7 @@ Usage
 
 .. code-block:: console
 
-    pip install -e git+file:///<LOCAL_PATH>/api@master
+    pip install -e <LOCAL_PATH>/geolod-api
 
 - Append required apps to ``INSTALLED_APPS`` var in your **settings.py**:
       
@@ -147,12 +147,28 @@ Usage
 .. code-block:: bash
     
     python manage.py syncdb
+
+- Add api urls to urls.py of the tutorial application:
+
+.. code-block:: django
+
+    urlpatterns = [
+      url(r'^admin/', include(admin.site.urls)),
+      #oaks_rest_api
+      url(r'^', include('api.urls')),
+    ]
   
 - Start geogig with:
 
 .. code-block:: bash
     
     geogig-gateway
+
+- Start the local server at the default port 8000 with gunicorn:
+
+.. code-block:: console
+
+    gunicorn tutorial.wsgi
   
   
 

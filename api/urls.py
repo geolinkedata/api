@@ -1,12 +1,13 @@
 from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 from api import views
-#from django.conf import settings
+# from django.conf import settings
 
 urlpatterns = patterns('',
-    url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
-    url(r'^v1/geo/api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework')),
+    url(r'^oauth2/',
+        include('provider.oauth2.urls', namespace='oauth2')),
+    url(r'^v1/geo/api-auth/',
+        include('rest_framework.urls', namespace='rest_framework')),
 
     url(r'^v1/geo/data/$', views.Data.as_view()),
 
@@ -29,8 +30,7 @@ urlpatterns = patterns('',
 
     url(r'^v1/geo/current-user/$', views.CurrentUser.as_view()),
 
-    #url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.UPLOAD_SHAPE,})
-
+    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.UPLOAD_SHAPE,})
 
 )
 

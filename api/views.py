@@ -18,7 +18,6 @@ from os.path import basename, splitext, isdir
 from zipfile import BadZipfile
 
 
-
 def download_file(file, file_name):
     """
     Outputs a file via HttpResponse
@@ -202,34 +201,34 @@ class ShapeList(APIView):
         token = NodeToken.objects.create(user=self.request.user)
 
         if store_in_semantic_db:
-          	#params = request.DATA.dict()
-        params['input_file'] = file_shp.shp.name
+            # params = request.DATA.dict()
+            params['input_file'] = file_shp.shp.name
 
-        pos = params['input_file'].rfind('/')
-        params['feature_string'] = params['input_file'] \
-        [pos+1:-4]
+            pos = params['input_file'].rfind('/')
+            params['feature_string'] = params['input_file'] \
+            [pos+1:-4]
 
-        params['output_file'] = settings.UPLOAD_TRIPLE_STORE+ \
-                '/'+params['feature_string']+'.'+params['format_file']
-        params['owner'] = self.request.user
+            params['output_file'] = settings.UPLOAD_TRIPLE_STORE+ \
+                    '/'+params['feature_string']+'.'+params['format_file']
+            params['owner'] = self.request.user
 
-          #create commit message for geogit
-          #if params.has_key('commit_msg'):
-          #if params['commit_msg'] != '':
+            #create commit message for geogit
+            #if params.has_key('commit_msg'):
+            #if params['commit_msg'] != '':
               #commit_msg = params['commit_msg']
-          #else:
+            #else:
               #commit_msg = 'shape file '+ \
               #params['feature_string']+' imported.'
               #params.pop('commit_msg')
-          #else:
-          #return Response({'commit_msg':["This query parameter is required."]},
+            #else:
+            #return Response({'commit_msg':["This query parameter is required."]},
                   #status=status.HTTP_400_BAD_REQUEST)
 
-              #TODO:: vedi se possibile togliere triple_store		     
-        triple_store = TripleStore.objects.create(**params)
-        triple_store.shp.add(file_shp)
+            # TODO:: vedi se possibile togliere triple_store		     
+            triple_store = TripleStore.objects.create(**params)
+            triple_store.shp.add(file_shp)
 
-        params = rename_params(params)
+            params = rename_params(params)
 
           #call geogit and commit uploaded shp
           #geogit = Git(owner=self.request.user)
@@ -237,13 +236,11 @@ class ShapeList(APIView):
 
 
 
-        result = post_node_server(data=params, token=token, url='/loadShape')
+            result = post_node_server(data=params, token=token, url='/loadShape')
         else:
-        result = post_node_server(data={'input_file': file_shp.shp.name
-                           },
-                           token=token, url='/loadShpInGeonode')
+            result = post_node_server(data={'input_file': file_shp.shp.name}, token=token, url='/loadShpInGeonode')
 
-        return Response({'detail': result['details']}, 
+        return Response({'detail': result['details']},
               status=result['status'])
 
         #if result == True:
@@ -260,7 +257,7 @@ class ShapeList(APIView):
             if upload_type == 'base':
                 if shape_serializer.is_valid():
                     file_shp = self.save_shp(request.FILES, self.request.user)
-            save_ckan_resource(file_shp.id, params)  
+            # save_ckan_resource(file_shp.id, params)  
                     return process(file_shp, params, store_in_semantic_db=False)
                 elif u'zip' in request.FILES:
                     f = get_shp_from_zip(request.FILES['zip'])
