@@ -1,10 +1,11 @@
+=====================
 Geolinkedata REST API
 =====================
 
 Geolinkedata REST API is a Django app to provide restful api for the project Geolinkedata.
 
 Requirements
-------------
+============
 
 It requires geogig. Install it with:
 
@@ -23,7 +24,7 @@ It is recommended to isolate the development in a virtual environment. For examp
 .. _pyenv: https://github.com/yyuu/pyenv
 
 Development
------------
+===========
 
 Create a virtual enviroment with the specified version of *python*:
 
@@ -58,8 +59,16 @@ and install these python packages:
   pip install django-rest-swagger
   pip install geogig-py
 
-Settings
---------
+Usage
+-----
+
+- Start a new Django project:
+
+.. code-block:: console
+
+    mkdir usage
+    django-admin startproject tutorial .
+
 - Append required apps to ``INSTALLED_APPS`` var in your **settings.py**:
       
 .. code-block:: python
@@ -79,49 +88,52 @@ Settings
 
 .. code-block:: python
   
-  #dirs for upload and storing files
+  # dirs for upload and storing files
   UPLOAD_SHAPE = '/tmp/shapes'
   UPLOAD_TRIPLE_STORE = '/tmp/triple-stores'
-  
-  #rest_framework config
+
+  # rest_framework config
   REST_FRAMEWORK = {
 
-   'DEFAULT_AUTHENTICATION_CLASSES': (
-    'rest_framework.authentication.BasicAuthentication',
-    'rest_framework.authentication.SessionAuthentication',
-    'rest_framework.authentication.OAuth2Authentication',
-    ),
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.XMLRenderer',
-    ),
-    'DEFAULT_THROTTLE_CLASSES': (
-        'rest_framework.throttling.ScopedRateThrottle',
-    ),
-    'DEFAULT_THROTTLE_RATES': {
-        'default': '10/minute', 
-        'download': '50/minute', 
-        'utility': '5/minute', 
-    }
+      'DEFAULT_AUTHENTICATION_CLASSES':
+          (
+              'rest_framework.authentication.BasicAuthentication',
+              'rest_framework.authentication.SessionAuthentication',
+              'rest_framework.authentication.OAuth2Authentication',
+          ),
+      'DEFAULT_RENDERER_CLASSES':
+          (
+              'rest_framework.renderers.BrowsableAPIRenderer',
+              'rest_framework.renderers.JSONRenderer',
+              'rest_framework.renderers.XMLRenderer',
+          ),
+      'DEFAULT_THROTTLE_CLASSES':
+          (
+              'rest_framework.throttling.ScopedRateThrottle',
+          ),
+      'DEFAULT_THROTTLE_RATES':
+          {
+              'default': '10/minute',
+              'download': '50/minute',
+              'utility': '5/minute',
+          }
   }
 
   #rest swagger config
   SWAGGER_SETTINGS = {
-    "exclude_namespaces": [],
-    "api_version": '1.0',  
-    "api_path": "/",  
-    "enabled_methods": [  
-        'get',
-        'post',
-        'put',
-        'patch',
-        'delete'
-    ],
-    "api_key": '',
-    "is_authenticated": False,  
-     authentication,
-    "is_superuser": False,  
+      "exclude_namespaces": [],
+      "api_version": '1.0',
+      "api_path": "/",
+      "enabled_methods": [
+          'get',
+          'post',
+          'put',
+          'patch',
+          'delete'
+      ],
+      "api_key": '',
+      "is_authenticated": False,
+      "is_superuser": False,
   }
   
 - Create the api db tables:
