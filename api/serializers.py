@@ -60,8 +60,7 @@ class ShapeFileSerializer(serializers.ModelSerializer):
   
 
 class TripleStoreSerializer(serializers.ModelSerializer):
-    # shp = serializers.PrimaryKeyRelatedField(many=True)
-    shp = serializers.PrimaryKeyRelatedField(queryset=ShapeFile.objects.all())
+    shp = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     owner = serializers.Field(source='owner.username')
 
     class Meta:
@@ -97,8 +96,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     used by authentication system
     """
-    # shapefiles = serializers.PrimaryKeyRelatedField(many=True)
-    shapefiles = serializers.PrimaryKeyRelatedField(queryset=ShapeFile.objects.all())
+    shapefiles = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = User

@@ -89,11 +89,11 @@ def zip_files(files, zip_name):
     #None, otherwise.
 
     if files_len > file_not_found_count:
-	   return None
+        return None
     else:
-	   delete_file(zip_name)
-	raise BadZipfile('Zip file not valid!')
-      
+        delete_file(zip_name)
+        raise BadZipfile('Zip file not valid!')
+
 
 def save_shape_in_tmp_dir(shp_file):
     """
