@@ -30,7 +30,8 @@ urlpatterns = patterns('',
 
     url(r'^v1/geo/current-user/$', views.CurrentUser.as_view()),
 
-    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.UPLOAD_SHAPE,})
+    # url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+    #    'document_root': settings.UPLOAD_SHAPE,})
 
 )
 

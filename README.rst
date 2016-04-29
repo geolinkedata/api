@@ -90,10 +90,12 @@ Usage
         'api',
       )
  
-- add these variables in the same file:
+- add these configurations in the same file:
 
 .. code-block:: python
   
+  STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
   # dirs for upload and storing files
   UPLOAD_SHAPE = '/tmp/shapes'
   UPLOAD_TRIPLE_STORE = '/tmp/triple-stores'
@@ -151,17 +153,29 @@ Usage
 
 .. code-block:: django
 
+    from django.conf import settings
+    from django.conf.urls.static import static
+
     urlpatterns = [
       url(r'^admin/', include(admin.site.urls)),
-      #oaks_rest_api
+      # api
       url(r'^', include('api.urls')),
-    ]
+      # api swaggerized
+      url(r'^docs/', include('rest_framework_swagger.urls')),
+    ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
   
 - Start geogig with:
 
 .. code-block:: bash
     
     geogig-gateway
+
+- Run the command for serving static files:
+
+.. code-block:: console
+  
+    cd usage
+    python manage.py collectstatic  
 
 - Start the local server at the default port 8000 with gunicorn:
 
