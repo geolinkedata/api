@@ -33,6 +33,8 @@ class ShapeFileSerializer(serializers.ModelSerializer):
         if not attrs['dbf'].content_type == 'application/x-dbf':
             raise serializers.ValidationError("dbf not valid.")
         """
+        instance = ShapeFile(**attrs)
+        instance.clean()
         # validate shapefile name
         if all(x in attrs for x in ('shp', 'dbf', 'shx')):
             shp_name = attrs['shp'].name.split('.')[0]

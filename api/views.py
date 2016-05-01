@@ -664,7 +664,6 @@ class DownloadFile(APIView):
             return Response({'type': ["This query parameter is required."]},
                             status=status.HTTP_400_BAD_REQUEST)
 
-
     def delete(self, request, name):
         if request.QUERY_PARAMS.has_key('type'):
             file_format = request.QUERY_PARAMS['type'].lower()
@@ -677,7 +676,7 @@ class DownloadFile(APIView):
                     return shape_file_response
 
             elif file_format in [v for v, t in TGEO_STORE_FORMATS]:
-                file_name = name+'.'+file_format
+                file_name = name + '.' + file_format
                 triple_store_response = self.__search_triple_store(file_name)
                 if isinstance(triple_store_response, TripleStore):
                     triple_store_response.delete()
@@ -686,8 +685,8 @@ class DownloadFile(APIView):
                     return triple_store_response
 
         else:
-            return Response({'type':["This query parameter is required."]},
-                           status=status.HTTP_400_BAD_REQUEST)
+            return Response({'type': ["This query parameter is required."]},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class GitLog(APIView):
