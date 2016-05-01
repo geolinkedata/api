@@ -100,10 +100,6 @@ Triple Stores
 |**DELETE**   | cancella il file con id= **id_store**                        | 
 +-------------+--------------------------------------------------------------+
 
-
-
-
-
 Risorse pubbliche
 -----------------
 
@@ -111,7 +107,7 @@ conversione di formato (utility)
 ````````````````````````````````
 
 +----------------------------------------------------------------------------+
-|         http://api.geolinkedata.org/v1/geo/data/shape-convert              |
+|         http://api.geolinkedata.org/v1/geo/data/shape2triple              |
 +-------------+--------------------------------------------------------------+
 |**POST**     | converte uno shape in triple-store file e lo rende           | 
 |             | disponibile per il download                                  |  

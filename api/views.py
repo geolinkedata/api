@@ -103,104 +103,104 @@ class ShapeList(APIView):
         uploads a  shape file
         type -- base, all
         ---
-    	omit_serializer: true	
-    	consumes: ["multipart/form-data"]
-    	parameters:
-    	    - name: shp
-    	      type: file
-    	      required: true
-    	      paramType: form
-    	    - name: shx
-    	      type: file
-    	      required: true
-    	      paramType: form
-    	    - name: dbf
-    	      type: file
-    	      required: true
-    	      paramType: form
-    	    - name: prj
-    	      type: file
-    	      required: true	
-    	      paramType: form	   
-    	    - name: type_wkt
-    	      type: string
-    	      required: false
-    	      paramType: form
-    	    - name: format_file
-    	      type: string
-    	      required: false
-    	      paramType: form	
-    	      defaultValue: rdf
-    	    - name: target_store
-    	      type: string
-    	      required: false
-    	      paramType: form
-    	      defaultValue: 'GeoSparql'
-    	    - name: feature_string
-    	      type: string
-    	      required: false
-    	      paramType: form	  
-    	    - name: attribute
-    	      type: string
-    	      required: false
-    	      paramType: form	
-    	    - name: ignore
-    	      type: string
-    	      required: false
-    	      paramType: form	
-    	      defaultValue: 'UNK'
-    	    - name: name
-    	      type: string
-    	      required: false
-    	      paramType: form
-    	    - name: class_store
-    	      type: string
-    	      required: true
-    	      paramType: form	
-    	    - name: ns_URI
-    	      type: string
-    	      required: false
-    	      paramType: form
-    	    - name: ns_prefix
-    	      type: string
-    	      required: false
-    	      paramType: form	  
-    	    - name: ontology_NS
-    	      type: string
-    	      required: false
-    	      paramType: form	 
-    	    - name: ontology_NS_prefix
-    	      type: string
-    	      required: false
-    	      defaultValue: 'geo'
-    	      paramType: form	
-    	    - name: default_lang
-    	      type: string
-    	      required: false
-    	      paramType: form	
-    	      defaultValue: 'en'
-    	    - name: output_file
-    	      type: string
-    	      required: false
-    	      paramType: form	 
-    	    - name: commit_msg
-    	      type: string
-    	      required: false
-    	      paramType: form	
-    	    - name: ckan_api_key
-    	      type: string
-    	      required: false
-    	      paramType: form
-    	    - name: ckan_id
-    	      type: string
-    	      required: false
-    	      paramType: form	      
+        omit_serializer: true
+        consumes: ["multipart/form-data"]
+        parameters:
+            - name: shp
+              type: file
+              required: true
+              paramType: form
+            - name: shx
+              type: file
+              required: true
+              paramType: form
+            - name: dbf
+              type: file
+              required: true
+              paramType: form
+            - name: prj
+              type: file
+              required: true
+              paramType: form
+            - name: type_wkt
+              type: string
+              required: false
+              paramType: form
+            - name: format_file
+              type: string
+              required: false
+              paramType: form
+              defaultValue: rdf
+            - name: target_store
+              type: string
+              required: false
+              paramType: form
+              defaultValue: 'GeoSparql'
+            - name: feature_string
+              type: string
+              required: false
+              paramType: form
+            - name: attribute
+              type: string
+              required: false
+              paramType: form
+            - name: ignore
+              type: string
+              required: false
+              paramType: form
+              defaultValue: 'UNK'
+            - name: name
+              type: string
+              required: false
+              paramType: form
+            - name: class_store
+              type: string
+              required: true
+              paramType: form
+            - name: ns_URI
+              type: string
+              required: false
+              paramType: form
+            - name: ns_prefix
+              type: string
+              required: false
+              paramType: form
+            - name: ontology_NS
+              type: string
+              required: false
+              paramType: form
+            - name: ontology_NS_prefix
+              type: string
+              required: false
+              defaultValue: 'geo'
+              paramType: form
+            - name: default_lang
+              type: string
+              required: false
+              paramType: form
+              defaultValue: 'en'
+            - name: output_file
+              type: string
+              required: false
+              paramType: form
+            - name: commit_msg
+              type: string
+              required: false
+              paramType: form
+            - name: ckan_api_key
+              type: string
+              required: false
+              paramType: form
+            - name: ckan_id
+              type: string
+              required: false
+              paramType: form
         """
         params = request.data.dict()
 
     def process(file_shp, params, store_in_semantic_db=False):
 
-        #create auth token
+        # create auth token
         token = NodeToken.objects.create(user=self.request.user)
 
         if store_in_semantic_db:
@@ -209,47 +209,49 @@ class ShapeList(APIView):
 
             pos = params['input_file'].rfind('/')
             params['feature_string'] = params['input_file'] \
-            [pos+1:-4]
+                    [pos+1:-4]
 
-            params['output_file'] = settings.UPLOAD_TRIPLE_STORE+ \
-                    '/'+params['feature_string']+'.'+params['format_file']
+            params['output_file'] = settings.UPLOAD_TRIPLE_STORE + \
+                    '/' + params['feature_string'] + '.' + params['format_file']
             params['owner'] = self.request.user
 
-            #create commit message for geogit
-            #if params.has_key('commit_msg'):
-            #if params['commit_msg'] != '':
-              #commit_msg = params['commit_msg']
-            #else:
-              #commit_msg = 'shape file '+ \
-              #params['feature_string']+' imported.'
-              #params.pop('commit_msg')
-            #else:
-            #return Response({'commit_msg':["This query parameter is required."]},
-                  #status=status.HTTP_400_BAD_REQUEST)
+            # create commit message for geogit
+            # if params.has_key('commit_msg'):
+            # if params['commit_msg'] != '':
+            # commit_msg = params['commit_msg']
+            # else:
+            # commit_msg = 'shape file '+ \
+            # params['feature_string']+' imported.'
+            # params.pop('commit_msg')
+            # else:
+            # return Response({'commit_msg':
+            #                 ["This query parameter is required."]},
+            # status=status.HTTP_400_BAD_REQUEST)
 
-            # TODO:: vedi se possibile togliere triple_store		     
+            # TODO - vedi se possibile togliere triple_store
             triple_store = TripleStore.objects.create(**params)
             triple_store.shp.add(file_shp)
 
             params = rename_params(params)
 
-          #call geogit and commit uploaded shp
-          #geogit = Git(owner=self.request.user)
-          #geogit.push(shp=file_shp.shp.name, commit_msg=commit_msg)
+            # call geogit and commit uploaded shp
+            # geogit = Git(owner=self.request.user)
+            # geogit.push(shp=file_shp.shp.name, commit_msg=commit_msg)
 
-
-
-            result = post_node_server(data=params, token=token, url='/loadShape')
+            result = post_node_server(data=params, token=token,
+                                      url='/loadShape')
         else:
-            result = post_node_server(data={'input_file': file_shp.shp.name}, token=token, url='/loadShpInGeonode')
+            result = post_node_server(data={'input_file': file_shp.shp.name},
+                                      token=token, url='/loadShpInGeonode')
 
         return Response({'detail': result['details']},
-              status=result['status'])
+                        status=result['status'])
 
-        #if result == True:
-        #return Response({'detail': result['details'], status=result['status'])
-        #else:
-        #return Response({'detail': result}, status=status.HTTP_200_OK)
+        # if result == True:
+        # return Response({'detail': result['details'],
+        #                  status=result['status'])
+        # else:
+        # return Response({'detail': result}, status=status.HTTP_200_OK)
 
 
         if request.QUERY_PARAMS.has_key('type'):
@@ -260,36 +262,41 @@ class ShapeList(APIView):
             if upload_type == 'base':
                 if shape_serializer.is_valid(raise_exception=True):
                     file_shp = self.save_shp(request.data, self.request.user)
-            # save_ckan_resource(file_shp.id, params)  
-                    return process(file_shp, params, store_in_semantic_db=False)
+            # save_ckan_resource(file_shp.id, params)
+                    return process(file_shp, params,
+                                   store_in_semantic_db=False)
                 elif u'zip' in request.data:
                     f = get_shp_from_zip(request.data['zip'])
                     if f:
                         file_shp = self.save_shp(f, self.request.user)
-                        return process(file_shp, params, store_in_semantic_db=False)
+                        return process(file_shp, params,
+                                       store_in_semantic_db=False)
                     else:
-                      return Response(shape_serializer.errors,
-                                    status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)  
+                        return Response(shape_serializer.errors,
+                                        status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
                 else:
                     return Response(shape_serializer.errors,
                                     status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-	      
-            elif upload_type == 'all':                
+
+            elif upload_type == 'all':
                 if shape_serializer.is_valid(raise_exception=True):
                     triple_store_serializer = TripleStoreSerializer(
                         data=request.data)
                     if triple_store_serializer.is_valid(raise_exception=True):
-                        file_shp = self.save_shp(request.data, self.request.user)
-                        save_ckan_resource(file_shp.id, params) 
-                        return process(file_shp,  params, store_in_semantic_db=True)
+                        file_shp = self.save_shp(request.data,
+                                                 self.request.user)
+                        save_ckan_resource(file_shp.id, params)
+                        return process(file_shp, params,
+                                       store_in_semantic_db=True)
                     else:
                         return Response(triple_store_serializer.errors,
                                         status=status.HTTP_400_BAD_REQUEST)
                 elif u'zip' in request.data:
                     f = get_shp_from_zip(request.data['zip'])
                     if f:
-                        file_shape =  self.save_shp(f, self.request.user)
-                        return process(file_shape, params, store_in_semantic_db=True)
+                        file_shape = self.save_shp(f, self.request.user)
+                        return process(file_shape, params,
+                                       store_in_semantic_db=True)
                 else:
                     return Response(shape_serializer.errors,
                                     status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
@@ -321,51 +328,52 @@ class ShapeDetail(APIView):
         except ShapeFile.DoesNotExist:
             return Response({'detail': 'Not found'},
                             status=status.HTTP_404_NOT_FOUND)
-                            
+
         shp_name = basename(shape.shp.name)
-        #return Response({'url':  shape.shp.shp_name}, status=status.HTTP_200_OK)
-        
+        # return Response({'url':  shape.shp.shp_name},
+        #                 status=status.HTTP_200_OK)
+
         file_name = splitext(shp_name)[0]
-        zip_name = settings.UPLOAD_SHAPE+'/'+file_name
-        try: 
-	    zip_files([shape.shp.url, 
-		     shape.dbf.url,
-		     shape.shx.url, 
-		     shape.prj.url],
-		     zip_name)
-	except BadZipfile:
-	    return Response({'detail': 'Bad Zip file'},
+        zip_name = settings.UPLOAD_SHAPE + '/' + file_name
+        try:
+            zip_files([shape.shp.url,
+                      shape.dbf.url,
+                      shape.shx.url,
+                      shape.prj.url],
+                      zip_name)
+        except BadZipfile:
+            return Response({'detail': 'Bad Zip file'},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return download_file_url(zip_name+'.zip')        
-        
-        #return download_file(zip_files([shape.shp.url, shape.dbf.url,
-        #        shape.shx.url, shape.prj.url], zip_name), zip_name+'.zip')
-              
+        return download_file_url(zip_name + '.zip')
+
+        # return download_file(zip_files([shape.shp.url, shape.dbf.url,
+        #                      shape.shx.url, shape.prj.url], zip_name),
+        #                      zip_name+'.zip')
 
     def delete(self, request, pk):
         """
         Deletes a shape file from the server
         """
-        try:     
+        try:
             shape = ShapeFile.objects.get(pk=pk)
         except ShapeFile.DoesNotExist:
             return Response({'detail': 'Not found'},
                             status=status.HTTP_404_NOT_FOUND)
-        shape.delete()  
-        
-        #delete related
-        try: 
-	   ckan_resource = CkanResource.objects.get(shp_id=pk)
-	   ckan_resource.delete()
-	except CkanResource.DoesNotExist:
-	   pass
-	 
-        try: 
-	   geonode_resource = GeonodeResource.objects.get(shp_id=pk)
-	   geonode_resource.delete()
-	except GeonodeResource.DoesNotExist:
-	   pass	
-	 
+        shape.delete()
+
+        # delete related
+        try:
+            ckan_resource = CkanResource.objects.get(shp_id=pk)
+            ckan_resource.delete()
+        except CkanResource.DoesNotExist:
+            pass
+
+        try:
+            geonode_resource = GeonodeResource.objects.get(shp_id=pk)
+            geonode_resource.delete()
+        except GeonodeResource.DoesNotExist:
+            pass
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -378,9 +386,10 @@ class ShapeConvert(APIView):
 
     def post(self, request):
         """
-        Outputs a triple store format file
+        The response gives a triple store format file
         ---
         omit_serializer: true
+        response_serializer: TODO
         consumes: ["multipart/form-data"]
         parameters:
             - name: shp
@@ -429,9 +438,9 @@ class ShapeConvert(APIView):
                                         status.HTTP_500_INTERNAL_SERVER_ERROR)
                 return file_content
                 """
-                
-                #return Response({'triple-store_url': ''},
-                 #                     status=status.HTTP_200_OK)
+
+                # return Response({'triple-store_url': ''},
+                #                 status=status.HTTP_200_OK)
 
             else:
                 return Response(triple_store_serializer.errors,
@@ -464,14 +473,14 @@ class TripleStoreList(APIView):
         """
         Uploads a triple store file on server and store in semantic db
         ---
-    #serializer: api.serializers.TripleStoreSerializer
-    #omit_serializer: true
-    consumes: ["multipart/form-data"]
-    parameters:
-        - name: triple-store_file
-          type: file
-          required: true
-          paramType: form
+        #serializer: api.serializers.TripleStoreSerializer
+        #omit_serializer: true
+        consumes: ["multipart/form-data"]
+        parameters:
+            - name: triple-store_file
+              type: file
+              required: true
+              paramType: form
         """
 
         create_dir(settings.UPLOAD_TRIPLE_STORE)
@@ -648,7 +657,8 @@ class DownloadFile(APIView):
                         try:
                             file_list.append(triple_store_file.output_file)
                         except IOError:
-                            pass  # return Response(status=status.HTTP_404_NOT_FOUND)
+                            pass
+                            # return Response(status=status.HTTP_404_NOT_FOUND)
 
                 if len(file_list) > 0:
                     return download_file(zip_files(file_list,
