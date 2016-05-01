@@ -720,26 +720,16 @@ class UserDetail(generics.RetrieveAPIView):
 
 class CurrentUser(APIView):
     """
-    Gets current user
-    # ---
-    # basePath: /v1/geo
-    # produces:
-    #   - application/json
-    # paths:
-    #   /current-user:
-    #     responses:
-    #         '200':
-    #           description: Successful response with the user
-    type:
-        id:
-          type: integer
-        username:
-          type: string
-        shapefiles:
-          type: array
+    Obtain the current user who has been logged in.
     """
     permission_classes = (IsAuthenticated, )
 
     def get(self, request):
+        """
+        The response is the User object with the properties id,
+        username and the array of the owned shapefiles
+        ---
+        response_serializer: UserSerializer
+        """
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
