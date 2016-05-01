@@ -55,6 +55,7 @@ and install these python packages:
 .. code-block:: bash
 
   pip install djangorestframework
+  pip install djangorestframework-xml
   pip install django-oauth-toolkit
   pip install django-rest-swagger
   pip install geogig-py
@@ -113,6 +114,10 @@ Usage
           (
               'rest_framework.renderers.BrowsableAPIRenderer',
               'rest_framework.renderers.JSONRenderer',
+              'rest_framework.renderers.XMLRenderer',
+          ),
+      'DEFAULT_PARSER_CLASSES': (
+              'rest_framework_xml.parsers.XMLParser',
           ),
       'DEFAULT_THROTTLE_CLASSES':
           (
