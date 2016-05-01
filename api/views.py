@@ -196,7 +196,7 @@ class ShapeList(APIView):
     	      required: false
     	      paramType: form	      
         """
-        params = request.DATA.dict()
+        params = request.data.dict()
 
     def process(file_shp, params, store_in_semantic_db=False):
 
@@ -204,7 +204,7 @@ class ShapeList(APIView):
         token = NodeToken.objects.create(user=self.request.user)
 
         if store_in_semantic_db:
-            # params = request.DATA.dict()
+            # params = request.data.dict()
             params['input_file'] = file_shp.shp.name
 
             pos = params['input_file'].rfind('/')
@@ -255,15 +255,15 @@ class ShapeList(APIView):
         if request.QUERY_PARAMS.has_key('type'):
             upload_type = request.QUERY_PARAMS['type'].lower()
             create_dir(settings.UPLOAD_SHAPE)
-            shape_serializer = ShapeFileSerializer(data=request.FILES)
+            shape_serializer = ShapeFileSerializer(data=request.data)
 
             if upload_type == 'base':
                 if shape_serializer.is_valid():
-                    file_shp = self.save_shp(request.FILES, self.request.user)
+                    file_shp = self.save_shp(request.data, self.request.user)
             # save_ckan_resource(file_shp.id, params)  
                     return process(file_shp, params, store_in_semantic_db=False)
-                elif u'zip' in request.FILES:
-                    f = get_shp_from_zip(request.FILES['zip'])
+                elif u'zip' in request.data:
+                    f = get_shp_from_zip(request.data['zip'])
                     if f:
                         file_shp = self.save_shp(f, self.request.user)
                         return process(file_shp, params, store_in_semantic_db=False)
@@ -277,16 +277,16 @@ class ShapeList(APIView):
             elif upload_type == 'all':                
                 if shape_serializer.is_valid():
                     triple_store_serializer = TripleStoreSerializer(
-                        data=request.DATA)
+                        data=request.data)
                     if triple_store_serializer.is_valid():
-                        file_shp = self.save_shp(request.FILES, self.request.user)
+                        file_shp = self.save_shp(request.data, self.request.user)
                         save_ckan_resource(file_shp.id, params) 
                         return process(file_shp,  params, store_in_semantic_db=True)
                     else:
                         return Response(triple_store_serializer.errors,
                                         status=status.HTTP_400_BAD_REQUEST)
-                elif u'zip' in request.FILES:
-                    f = get_shp_from_zip(request.FILES['zip'])
+                elif u'zip' in request.data:
+                    f = get_shp_from_zip(request.data['zip'])
                     if f:
                         file_shape =  self.save_shp(f, self.request.user)
                         return process(file_shape, params, store_in_semantic_db=True)
@@ -400,20 +400,20 @@ class ShapeConvert(APIView):
               required: true
               paramType: form
         """
-        shape_serializer = ShapeFileSerializer(data=request.FILES)
+        shape_serializer = ShapeFileSerializer(data=request.data)
         if shape_serializer.is_valid():
-            #create tmp dir
+            # create tmp dir
             tmp_dir = save_shape_in_tmp_dir(
-                [request.FILES['shp'], request.FILES['shx'],
-                 request.FILES['dbf'], request.FILES['prj']])
-            request.DATA['input_file'] = tmp_dir+request.FILES['shp'].name
-            out_file_path = tmp_dir+request.FILES['shp'].name[:-4]
-            out_file_path += '.'+request.DATA['format_file'].lower()
-            request.DATA['output_file'] = out_file_path
+                [request.data['shp'], request.data['shx'],
+                 request.data['dbf'], request.data['prj']])
+            request.data['input_file'] = tmp_dir + request.data['shp'].name
+            out_file_path = tmp_dir + request.data['shp'].name[:-4]
+            out_file_path += '.' + request.data['format_file'].lower()
+            request.data['output_file'] = out_file_path
 
-            triple_store_serializer = TripleStoreSerializer(data=request.DATA)
+            triple_store_serializer = TripleStoreSerializer(data=request.data)
             if triple_store_serializer.is_valid():
-                params = rename_params(request.DATA.dict())
+                params = rename_params(request.data.dict())
                 print post_node_server(data=params, token=None,
                                        url='/convertShape')
 
@@ -464,30 +464,30 @@ class TripleStoreList(APIView):
         """
         Uploads a triple store file on server and store in semantic db
         ---
-	#serializer: api.serializers.TripleStoreSerializer	
-	#omit_serializer: true	
-	consumes: ["multipart/form-data"]
-	parameters:
-	    - name: triple-store_file
-	      type: file
-	      required: true	
-	      paramType: form	           
+    #serializer: api.serializers.TripleStoreSerializer
+    #omit_serializer: true
+    consumes: ["multipart/form-data"]
+    parameters:
+        - name: triple-store_file
+          type: file
+          required: true
+          paramType: form
         """
-        
-        
+
         create_dir(settings.UPLOAD_TRIPLE_STORE)
 
-        #save file
-        triple_store_file = request.FILES['triple-store_file']
+        # save file
+        triple_store_file = request.data['triple-store_file']
         TripleStore.objects.create(output_file=triple_store_file,
                                    owner=self.request.user)
-        #store in semantic db
+        # store in semantic db
         token = NodeToken.objects.create(user=self.request.user)
-        params = {'filename':str(triple_store_file), 'path': settings.UPLOAD_TRIPLE_STORE }
-        result = post_node_server(data=params, token=token, url='/loadTripleStore')
-        
-	return Response({'detail': result['details']}, status=result['status'])  
-    
+        params = {'filename': str(triple_store_file),
+                  'path': settings.UPLOAD_TRIPLE_STORE}
+        result = post_node_server(data=params, token=token,
+                                  url='/loadTripleStore')
+
+        return Response({'detail': result['details']}, status=result['status'])
 
 
 class TripleStoreDetail(APIView):

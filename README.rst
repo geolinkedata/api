@@ -183,6 +183,23 @@ Usage
 
     gunicorn tutorial.wsgi
 
+Fetch the API model
+-------------------
+
+Install the utility `fetch-swagger-schema`_ 
+
+.. _fetch-swagger-schema: https://github.com/signalfx/fetch-swagger-schema
+
+.. code-block:: console
+
+    npm install -g fetch-swagger-schema
+
+Fetch and save schema as a json file:
+
+.. code-block:: console
+
+    fetch-swagger-schema http://127.0.0.1:8000/docs/api-docs/ api.json
+
 How to document your API
 ------------------------
 
