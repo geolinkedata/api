@@ -46,7 +46,7 @@ def download_file_url(file_path):
     Creates link url file resource
     """
     file_path = file_path.replace('/var/www/', '')
-    url = settings.SITEURL+file_path
+    url = settings.SITEURL + file_path
     return Response({'file': url}, status=status.HTTP_200_OK)
 
 
@@ -54,14 +54,16 @@ def save_ckan_resource(id_shp, params):
     """
     saves a ckan resource
     """
-    #check api_key
-    #if api_key.is_valid():  
+    # check api_key
+    # if api_key.is_valid():
     if params.has_key('ckan_api_key') and params.has_key('ckan_id'):
-      CkanResource.objects.create(api_key=params['ckan_api_key'], id_resource=params['ckan_id'], shp_id=id_shp)
-      params.pop('ckan_api_key')				  
-      params.pop('ckan_id')
+        CkanResource.objects.create(api_key=params['ckan_api_key'],
+                                    id_resource=params['ckan_id'],
+                                    shp_id=id_shp)
+        params.pop('ckan_api_key')
+        params.pop('ckan_id')
 
-#def save_geonode_resource(id_shp, ):
+# def save_geonode_resource(id_shp, ):
 
 
 class ShapeList(APIView):
@@ -80,8 +82,9 @@ class ShapeList(APIView):
         shx = shape_file['shx']
         dbf = shape_file['dbf']
         prj = shape_file['prj']
-        file_saved = ShapeFile.objects.create(shp=shp, shx=shx, dbf=dbf, prj=prj,
-            owner=user)
+        file_saved = ShapeFile.objects.create(shp=shp, shx=shx,
+                                              dbf=dbf, prj=prj,
+                                              owner=user)
         return file_saved
 
     def pre_save(self, obj):
@@ -294,8 +297,9 @@ class ShapeList(APIView):
                 return Response({'type': ['Select a valid choice!']},
                                 status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'type':["This query parameter is required."]},
+            return Response({'type': ["This query parameter is required."]},
                             status=status.HTTP_400_BAD_REQUEST)
+
 
 class ShapeDetail(APIView):
     """
@@ -367,7 +371,7 @@ class ShapeDetail(APIView):
 
 class ShapeConvert(APIView):
     """
-    Converts a shape in a triple store format file(utility)   
+    Converts a shape in a triple store format file(utility)
     """
     throttle_scope = 'utility'
     parser_classes = (MultiPartParser, FormParser)
@@ -376,25 +380,25 @@ class ShapeConvert(APIView):
         """
         Outputs a triple store format file
         ---
-	omit_serializer: true	
-	consumes: ["multipart/form-data"]
-	parameters:
-	    - name: shp
-	      type: file
-	      required: true
-	      paramType: form
-	    - name: shx
-	      type: file
-	      required: true
-	      paramType: form
-	    - name: dbf
-	      type: file
-	      required: true
-	      paramType: form
-	    - name: prj  
-	      type: file
-	      required: true
-	      paramType: form
+        omit_serializer: true
+        consumes: ["multipart/form-data"]
+        parameters:
+            - name: shp
+              type: file
+              required: true
+              paramType: form
+            - name: shx
+              type: file
+              required: true
+              paramType: form
+            - name: dbf
+              type: file
+              required: true
+              paramType: form
+            - name: prj
+              type: file
+              required: true
+              paramType: form
         """
         shape_serializer = ShapeFileSerializer(data=request.FILES)
         if shape_serializer.is_valid():
@@ -437,7 +441,6 @@ class ShapeConvert(APIView):
                             status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
 
-
 class TripleStoreList(APIView):
     """
     Triple Store resource
@@ -445,7 +448,6 @@ class TripleStoreList(APIView):
     throttle_scope = 'default'
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated, )
-
 
     def pre_save(self, obj):
         obj.owner = self.request.user
@@ -524,13 +526,13 @@ class TripleStoreDetail(APIView):
         """
         Deletes a triple store file from the server
         """
-        try:     
+        try:
             triplestore = TripleStore.objects.get(pk=pk)
         except TripleStore.DoesNotExist:
             return Response({'detail': 'Not found'},
                             status=status.HTTP_404_NOT_FOUND)
         triplestore.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)   
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class Data(APIView):
@@ -538,12 +540,14 @@ class Data(APIView):
     gets all uploaded data files
     """
     permission_classes = (IsAuthenticated, )
+
     def get(self, request):
         shapes = ShapeFile.objects.filter(owner_id=self.request.user)
         triple_stores = TripleStore.objects.filter(owner_id=self.request.user)
 
         shapes_serializer = ShapeFileSerializer(shapes, many=True)
-        triple_store_serializer = TripleStoreSerializer(triple_stores, many=True)
+        triple_store_serializer = TripleStoreSerializer(triple_stores,
+                                                        many=True)
 
         all_data = {'shapes': shapes_serializer.data,
                     'triple-stores': triple_store_serializer.data}
@@ -565,11 +569,11 @@ class DownloadFile(APIView):
         returns a ShapeFile object if founds it, HttpResponse otherwise
         """
         try:
-            path = settings.UPLOAD_SHAPE+'/'+file_name
-            shp = path+'.shp'
-            shx = path+'.shx'
-            dbf = path+'.dbf'
-            prj = path+'.prj'
+            path = settings.UPLOAD_SHAPE + '/' + file_name
+            shp = path + '.shp'
+            shx = path + '.shx'
+            dbf = path + '.dbf'
+            prj = path + '.prj'
             return ShapeFile.objects.get(shp=shp, shx=shx, dbf=dbf, prj=prj)
         except ShapeFile.DoesNotExist:
             return Response({'detail': 'File not found!'},
@@ -585,14 +589,14 @@ class DownloadFile(APIView):
         returns a TripleStore object if founds it, HttpResponse otherwise
         """
         try:
-            path = settings.UPLOAD_TRIPLE_STORE+'/'+file_name
+            path = settings.UPLOAD_TRIPLE_STORE + '/' + file_name
             return TripleStore.objects.get(output_file=path)
         except TripleStore.DoesNotExist:
             return Response({'detail': 'File not found.'},
                             status=status.HTTP_404_NOT_FOUND)
         except TripleStore.MultipleObjectsReturned:
             return Response({'detail': 'Server error, multiple instance file'},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request, name):
         """
@@ -609,13 +613,13 @@ class DownloadFile(APIView):
                         shape_file_response.shp.url,
                         shape_file_response.shx.url,
                         shape_file_response.dbf.url,
-                        shape_file.response.prj.url],
-                        name), name+'.zip')
+                        shape_file.response.prj.url], name),
+                        name + '.zip')
                 else:
                     return shape_file_response
 
             elif file_format in [v for v, t in TGEO_STORE_FORMATS]:
-                file_name = name+'.'+file_format
+                file_name = name + '.' + file_format
                 triple_store_response = self.__search_triple_store(file_name)
                 if isinstance(triple_store_response, TripleStore):
                     try:
@@ -638,18 +642,18 @@ class DownloadFile(APIView):
                                  shape_file.dbf.url, shape_file.prj.url]
 
                 for v, t in TGEO_STORE_FORMATS:
-                    file_name = name+'.'+v
+                    file_name = name + '.' + v
                     triple_store_file = self.__search_triple_store(file_name)
                     if isinstance(triple_store_file, TripleStore):
                         try:
                             file_list.append(triple_store_file.output_file)
                         except IOError:
-                            pass #return Response(status=status.HTTP_404_NOT_FOUND)
+                            pass  # return Response(status=status.HTTP_404_NOT_FOUND)
 
                 if len(file_list) > 0:
                     return download_file(zip_files(file_list,
-                                                          name+'_all.zip'),
-                                                name+'_all.zip')
+                                                   name + '_all.zip'),
+                                         name + '_all.zip')
                 else:
                     return Response({'detail': 'File not found'},
                                     status=status.HTTP_404_NOT_FOUND)
@@ -657,7 +661,7 @@ class DownloadFile(APIView):
                 return Response({'type': ['Select a valid choice!']},
                                 status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response({'type':["This query parameter is required."]},
+            return Response({'type': ["This query parameter is required."]},
                             status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -718,8 +722,25 @@ class UserDetail(generics.RetrieveAPIView):
 class CurrentUser(APIView):
     """
     Gets current user
+    # ---
+    # basePath: /v1/geo
+    # produces:
+    #   - application/json
+    # paths:
+    #   /current-user:
+    #     responses:
+    #         '200':
+    #           description: Successful response with the user
+    type:
+        id:
+          type: integer
+        username:
+          type: string
+        shapefiles:
+          type: array
     """
     permission_classes = (IsAuthenticated, )
+
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)

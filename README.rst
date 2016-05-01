@@ -182,8 +182,22 @@ Usage
 .. code-block:: console
 
     gunicorn tutorial.wsgi
-  
-  
+
+How to document your API
+------------------------
+
+You can edit your API specification using the Swagger Editor GUI. Follow this commands below
+
+.. code-block:: console
+
+    npm install -g http-server
+    wget https://github.com/swagger-api/swagger-editor/releases/download/v2.9.8/swagger-editor.zip
+    unzip swagger-editor.zip
+    http-server swagger-editor 
+
+Then you can open the `API console`_ at the local url.
+
+.. _API console: http://localhost:8080/
 
 
   

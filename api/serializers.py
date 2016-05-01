@@ -3,6 +3,7 @@ from api.models import *
 from django.core.validators import URLValidator
 from django.contrib.auth.models import User
 
+
 class ShapeFileSerializer(serializers.ModelSerializer):
     """
     shape file serializer
@@ -32,32 +33,30 @@ class ShapeFileSerializer(serializers.ModelSerializer):
         if not attrs['dbf'].content_type == 'application/x-dbf':
             raise serializers.ValidationError("dbf not valid.")
         """
-        #validate shapefile name
+        # validate shapefile name
         if all(x in attrs for x in ('shp', 'dbf', 'shx')):
-	    shp_name = attrs['shp'].name.split('.')[0]
-	    dbf_name = attrs['dbf'].name.split('.')[0]
-	    shx_name = attrs['shx'].name.split('.')[0]
-	else:
-	    raise serializers.ValidationError('shape file not valid!')
-	
-		
+            shp_name = attrs['shp'].name.split('.')[0]
+            dbf_name = attrs['dbf'].name.split('.')[0]
+            shx_name = attrs['shx'].name.split('.')[0]
+        else:
+            raise serializers.ValidationError('shape file not valid!')
+
         if not shp_name == dbf_name == shx_name:
             raise serializers.ValidationError('shape file not valid!')
         return attrs
-        
-        
+
     def get_shp(self, obj):
         return obj.shp.name.split('/')[-1]
-        
+
     def get_shx(self, obj):
         return obj.shx.name.split('/')[-1]
-        
+
     def get_dbf(self, obj):
         return obj.dbf.name.split('/')[-1]
-        
+
     def get_prj(self, obj):
-        return obj.prj.name.split('/')[-1]        
-  
+        return obj.prj.name.split('/')[-1]
+
 
 class TripleStoreSerializer(serializers.ModelSerializer):
     shp = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
@@ -66,7 +65,6 @@ class TripleStoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = TripleStore
         exclude = ('owner', 'input_file', 'output_file')
-
 
     def __validate_uri(self, param, param_name):
         """
@@ -77,7 +75,7 @@ class TripleStoreSerializer(serializers.ModelSerializer):
             url_validation(param)
         except serializers.ValidationError, e:
             raise serializers.ValidationError(
-                param_name+
+                param_name +
                 ' is not well-formed! Only absolute URIrefs can be included.')
 
     def validate(self, attrs):
@@ -85,9 +83,9 @@ class TripleStoreSerializer(serializers.ModelSerializer):
         validates uri params for rdf output format
         """
         if 'format_file' in attrs:
-	  if attrs['format_file'] == 'rdf':
-	      self.__validate_uri(attrs['ns_URI'], 'ns_URI')
-	      self.__validate_uri(attrs['ontology_NS'], 'ontology_NS')
+            if attrs['format_file'] == 'rdf':
+                self.__validate_uri(attrs['ns_URI'], 'ns_URI')
+                self.__validate_uri(attrs['ontology_NS'], 'ontology_NS')
 
         return attrs
 
@@ -104,15 +102,16 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CkanResourceSerializer(serializers.ModelSerializer):
-   """
-   Ckan resource serializer
-   """
-   class Meta:
-       model = CkanResource
-  
-class GeonodeResourceSerializer(serializers.ModelSerializer):  
-   """
-   Geonode resource serializer
-   """
-   class Meta:
-       model = GeonodeResource
+    """
+    Ckan resource serializer
+    """
+    class Meta:
+        model = CkanResource
+
+
+class GeonodeResourceSerializer(serializers.ModelSerializer):
+    """
+    Geonode resource serializer
+    """
+    class Meta:
+        model = GeonodeResource

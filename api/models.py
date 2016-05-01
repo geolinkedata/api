@@ -6,12 +6,12 @@ import os
 from hashlib import sha1
 from django.core.files.storage import FileSystemStorage
 
-#required params for triplegeo
+# required params for triplegeo
 TGEO_PARAMS = {
     'name': 'name',
     'class': 'type',
     'target_store': 'GeoSparql',
-    'ns_uri':'http://geoknow.eu/geodata#',
+    'ns_uri': 'http://geoknow.eu/geodata#',
     'ontology_ns': 'http://www.opengis.net/ont/geosparql#',
     'ontology_ns_prefix': 'geo',
     'ignore': 'UNK'
@@ -35,13 +35,18 @@ TGEO_STORE_FORMATS = (
     ('ttl', 'TURTLE'),
 )
 
+
 class ShapeFile(models.Model):
     upload_storage = FileSystemStorage(location='/var/www/geolinkedata-data')
 
-    shp = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
-    dbf = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
-    shx = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
-    prj = models.FileField(upload_to='shapes', max_length=200, storage=upload_storage)
+    shp = models.FileField(
+        upload_to='shapes', max_length=200, storage=upload_storage)
+    dbf = models.FileField(
+        upload_to='shapes', max_length=200, storage=upload_storage)
+    shx = models.FileField(
+        upload_to='shapes', max_length=200, storage=upload_storage)
+    prj = models.FileField(
+        upload_to='shapes', max_length=200, storage=upload_storage)
 
     owner = models.ForeignKey('auth.User', related_name='shapefiles')
 
@@ -55,21 +60,27 @@ class ShapeFile(models.Model):
 
 class TripleStore(models.Model):
 
-    format_file = models.CharField(max_length=9, choices=TGEO_STORE_FORMATS, null=True)
+    format_file = models.CharField(max_length=9, choices=TGEO_STORE_FORMATS,
+                                   null=True)
     target_store = models.CharField(max_length=200,
-                                    default=TGEO_PARAMS['target_store'], null=True)
+                                    default=TGEO_PARAMS['target_store'],
+                                    null=True)
     feature_string = models.CharField(max_length=200, blank=True, null=True)
     attribute = models.CharField(max_length=200, blank=True, null=True)
-    type_wkt = models.CharField(max_length=12, choices=TGEO_WKT_OBJECTS, null=True, blank=True)
+    type_wkt = models.CharField(max_length=12, choices=TGEO_WKT_OBJECTS,
+                                null=True, blank=True)
     name = models.CharField(max_length=200, default=TGEO_PARAMS['name'],
                             blank=True, null=True)
-    class_store = models.CharField(max_length=200, default=TGEO_PARAMS['class'],
+    class_store = models.CharField(max_length=200,
+                                   default=TGEO_PARAMS['class'],
                                    blank=True, null=True)
     ns_prefix = models.CharField(max_length=200, blank=True, null=True)
     ns_URI = models.CharField(max_length=200, default=TGEO_PARAMS['ns_uri'],
                               blank=True, null=True)
-    ontology_NS_prefix = models.CharField(
-        max_length=200, default=TGEO_PARAMS['ontology_ns_prefix'], blank=True, null=True)
+    ontology_NS_prefix = models.CharField(max_length=200,
+                                          default=TGEO_PARAMS
+                                          ['ontology_ns_prefix'],
+                                          blank=True, null=True)
     ontology_NS = models.CharField(max_length=200,
                                    default=TGEO_PARAMS['ontology_ns'],
                                    blank=True, null=True)
@@ -80,7 +91,7 @@ class TripleStore(models.Model):
     target_RS = models.CharField(max_length=200, blank=True, null=True)
     input_file = models.CharField(max_length=400, blank=True, null=True)
 
-    #output_file = models.CharField(max_length=400, blank=True)
+    # output_file = models.CharField(max_length=400, blank=True)
     output_file = models.FileField(upload_to=settings.UPLOAD_TRIPLE_STORE,
                                    max_length=200, blank=True, null=True)
 
@@ -96,19 +107,19 @@ class TripleStore(models.Model):
 class GeonodeResource(models.Model):
     layer = models.CharField(max_length=200, blank=False, null=True)
     workspace = models.CharField(max_length=50, blank=True, null=True)
-    map = models.CharField(max_length=300, blank=True, null=True)    
+    map = models.CharField(max_length=300, blank=True, null=True)
     output_wfs = models.CharField(max_length=300, blank=True, null=True)
-    
+
     shp = models.ForeignKey(ShapeFile)
-    
-  
+
+
 class CkanResource(models.Model):
     api_key = models.CharField(max_length=200, blank=True, null=True)
     id_resource = models.CharField(max_length=20, blank=True, null=True)
-    
+
     shp = models.ForeignKey(ShapeFile)
 
-    
+
 class UserDataLoadedEvents(models.Model):
     """
     This model contains every data loaded event.
