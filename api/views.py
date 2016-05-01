@@ -87,8 +87,8 @@ class ShapeList(APIView):
                                               owner=user)
         return file_saved
 
-    def pre_save(self, obj):
-        obj.owner = self.request.user
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
     def get(self, request):
         """
@@ -309,8 +309,8 @@ class ShapeDetail(APIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated, )
 
-    def pre_save(self, obj):
-        obj.owner = self.request.user
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
     def get(self, request, pk):
         """
@@ -449,8 +449,8 @@ class TripleStoreList(APIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated, )
 
-    def pre_save(self, obj):
-        obj.owner = self.request.user
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
     def get(self, request):
         """
@@ -498,8 +498,8 @@ class TripleStoreDetail(APIView):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = (IsAuthenticated, )
 
-    def pre_save(self, obj):
-        obj.owner = self.request.user
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
     def get(self, request, pk):
         """
