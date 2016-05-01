@@ -258,7 +258,7 @@ class ShapeList(APIView):
             shape_serializer = ShapeFileSerializer(data=request.data)
 
             if upload_type == 'base':
-                if shape_serializer.is_valid():
+                if shape_serializer.is_valid(raise_exception=True):
                     file_shp = self.save_shp(request.data, self.request.user)
             # save_ckan_resource(file_shp.id, params)  
                     return process(file_shp, params, store_in_semantic_db=False)
@@ -275,10 +275,10 @@ class ShapeList(APIView):
                                     status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 	      
             elif upload_type == 'all':                
-                if shape_serializer.is_valid():
+                if shape_serializer.is_valid(raise_exception=True):
                     triple_store_serializer = TripleStoreSerializer(
                         data=request.data)
-                    if triple_store_serializer.is_valid():
+                    if triple_store_serializer.is_valid(raise_exception=True):
                         file_shp = self.save_shp(request.data, self.request.user)
                         save_ckan_resource(file_shp.id, params) 
                         return process(file_shp,  params, store_in_semantic_db=True)
@@ -401,7 +401,7 @@ class ShapeConvert(APIView):
               paramType: form
         """
         shape_serializer = ShapeFileSerializer(data=request.data)
-        if shape_serializer.is_valid():
+        if shape_serializer.is_valid(raise_exception=True):
             # create tmp dir
             tmp_dir = save_shape_in_tmp_dir(
                 [request.data['shp'], request.data['shx'],
@@ -412,7 +412,7 @@ class ShapeConvert(APIView):
             request.data['output_file'] = out_file_path
 
             triple_store_serializer = TripleStoreSerializer(data=request.data)
-            if triple_store_serializer.is_valid():
+            if triple_store_serializer.is_valid(raise_exception=True):
                 params = rename_params(request.data.dict())
                 print post_node_server(data=params, token=None,
                                        url='/convertShape')
