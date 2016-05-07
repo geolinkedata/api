@@ -114,9 +114,10 @@ Usage
           (
               'rest_framework.renderers.BrowsableAPIRenderer',
               'rest_framework.renderers.JSONRenderer',
-              'rest_framework.renderers.XMLRenderer',
+              'rest_framework_xml.renderers.XMLRenderer',
           ),
-      'DEFAULT_PARSER_CLASSES': (
+      'DEFAULT_PARSER_CLASSES':
+          (
               'rest_framework_xml.parsers.XMLParser',
           ),
       'DEFAULT_THROTTLE_CLASSES':
@@ -208,7 +209,7 @@ Fetch and save schema as a json file:
 How to document your API
 ------------------------
 
-You can edit your API specification using the Swagger Editor GUI. Follow this commands below
+Actually the current fetched schema is based on specs 1.2 since **django-rest-swagger** doesn't support the new version 2.0. You can also edit your API specification with the latter version by using the Swagger Editor GUI. Follow this commands below
 
 .. code-block:: console
 

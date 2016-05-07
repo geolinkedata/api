@@ -1,0 +1,70 @@
+{
+    "apiVersion": "1.0",
+    "apis": [
+        {
+            "apiDeclaration": {
+                "apiVersion": "1.0",
+                "apis": [],
+                "basePath": "http://127.0.0.1:8000",
+                "models": {},
+                "resourcePath": "//v1/geo/current-user",
+                "swaggerVersion": "1.2"
+            },
+            "path": "/v1/geo/current-user"
+        },
+        {
+            "apiDeclaration": {
+                "apiVersion": "1.0",
+                "apis": [],
+                "basePath": "http://127.0.0.1:8000",
+                "models": {},
+                "resourcePath": "//v1/geo/data",
+                "swaggerVersion": "1.2"
+            },
+            "path": "/v1/geo/data"
+        },
+        {
+            "apiDeclaration": {
+                "apiVersion": "1.0",
+                "apis": [],
+                "basePath": "http://127.0.0.1:8000",
+                "models": {},
+                "resourcePath": "//v1/geo/gitlog",
+                "swaggerVersion": "1.2"
+            },
+            "path": "/v1/geo/gitlog"
+        },
+        {
+            "apiDeclaration": {
+                "apiVersion": "1.0",
+                "apis": [],
+                "basePath": "http://127.0.0.1:8000",
+                "models": {},
+                "resourcePath": "//v1/geo/shape2triple",
+                "swaggerVersion": "1.2"
+            },
+            "path": "/v1/geo/shape2triple"
+        },
+        {
+            "apiDeclaration": {
+                "apiVersion": "1.0",
+                "apis": [],
+                "basePath": "http://127.0.0.1:8000",
+                "models": {},
+                "resourcePath": "//v1/geo/users",
+                "swaggerVersion": "1.2"
+            },
+            "path": "/v1/geo/users"
+        }
+    ],
+    "basePath": "http://127.0.0.1:8000/docs/api-docs",
+    "info": {
+        "contact": "",
+        "description": "",
+        "license": "",
+        "licenseUrl": "",
+        "termsOfServiceUrl": "",
+        "title": ""
+    },
+    "swaggerVersion": "1.2"
+}

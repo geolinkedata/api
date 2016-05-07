@@ -1,0 +1,52 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: 'GeoLinkeData API'
+  description: Move your geographical data forward with the GeoLinkeData API
+host: localhost
+schemes:
+  - http
+basePath: /v1/geo
+produces:
+  - application/json
+paths:
+  /current-user:
+    get:
+      description: 
+        Obtain the current authenticated `User`.
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful response with the user
+          schema:
+            $ref: '#/definitions/User'
+            title: User
+            properties:
+                id:
+                  type: integer
+                username:
+                  type: string
+                shapefiles:
+                  type: array
+                    
+  /users:
+    get:
+      description:
+        Obtain all the users.
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successful response with the array of the object `User`.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+            title: Users
+            
+            
+            
+            
+            
+  
