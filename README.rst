@@ -189,6 +189,15 @@ Usage
 
     gunicorn tutorial.wsgi
 
+Usage with docker
+-----------------
+
+Run the application on the container by executing this command:
+
+.. code-block:: console
+
+    docker-compose up
+
 Fetch the API model
 -------------------
 
