@@ -192,11 +192,29 @@ Usage
 Usage with docker
 -----------------
 
-Run the application on the container by executing this command:
+Set up the shell with your docker machine:
+
+.. code-block:: console
+
+    eval $(docker-machine env default)
+
+Rebuild the services with this command:
+
+.. code-block:: console
+
+    docker-compose build
+
+Run the application on the container by executing:
 
 .. code-block:: console
 
     docker-compose up
+
+Add the first superuser for the application:
+
+.. code-block:: console
+    
+    docker-compose run web python manage.py createsuperuser
 
 Fetch the API model
 -------------------
