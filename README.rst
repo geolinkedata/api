@@ -157,7 +157,7 @@ Usage
 
 - Add api urls to urls.py of the tutorial application:
 
-.. code-block:: django
+.. code-block:: python
 
     from django.conf import settings
     from django.conf.urls.static import static
@@ -272,6 +272,10 @@ At this point we are able to making all authenticated calls to the APIs. For exa
 .. code-block:: bash
 
     curl -H "Cookie: csrftoken=$CSRFTOKEN_RESP; sessionid=$SESSIONID" -XGET 'http://192.168.99.100:8000/v1/geo/users/?format=json' -v
+
+e2e tests
+^^^^^^^^^
+Todo
 
 Fetch the API model
 -------------------
