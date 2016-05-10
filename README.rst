@@ -189,8 +189,8 @@ Usage
 
     gunicorn tutorial.wsgi
 
-Usage with docker
------------------
+Usage of the tutorial application with docker
+---------------------------------------------
 
 Set up the shell with your docker machine:
 
@@ -215,6 +215,63 @@ Add the first superuser for the application:
 .. code-block:: console
     
     docker-compose run web python manage.py createsuperuser
+
+Test the api_tutorial application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can test the API urls with the user just created in the sqlite database. First of all it would be useful to make it to the docker environment. So let's get started with some basic variable's settings for the docker host ip address:
+
+.. code-block:: bash
+
+    DOCKER_HOST_IP=$(docker-machine ip)
+
+In order to get the required cookies for making calls to the django site we can do the following request with `curl`_ or similar tools:
+
+.. _curl: https://curl.haxx.se/
+
+.. code-block:: bash
+
+    curl -Ic - -XGET http://$DOCKER_HOST_IP:8000/admin/login/\?next\=/admin/
+
+Each request has a response cookie named **csrftoken** that we want to catch and use it as a variable for the following requests: 
+
+.. code-block:: bash
+
+    CSRFTOKEN=$(curl -c - -XGET "http://${DOCKER_HOST_IP}:8000/admin/login/?next=/admin/" | grep csrftoken | cut -f 7)
+    echo $CSRFTOKEN
+
+.. note:: Alternatively you can use the commands below to extract the cookie:
+
+  .. code-block:: bash
+  
+      curl -I -XGET http://$DOCKER_HOST_IP:8000/admin/login/?next=/admin/ -o /dev/null -c cookies.txt -s
+      grep csrftoken cookies.txt | cut -f 7
+
+Once we have all the elements to accomplish the login request then run the HTTP POST with the following command:
+
+.. code-block:: bash
+
+    curl -H "Cookie: csrftoken=$CSRFTOKEN" -d "username=admin&password=admin1234&csrfmiddlewaretoken=$CSRFTOKEN&next=/admin/" -XPOST http://$DOCKER_HOST_IP:8000/admin/login/ -v -c -
+
+The response figures out two new cookies (*csrftoken*,*sessionid*) required for all authenticated calls to the web application urls. Embed the command above in a bash variable for automatically storing the cookies' value and then reuse them:
+
+.. code-block:: bash
+    
+    # csrftoken cookie
+    CSRFTOKEN_RESP=$(curl -H "Cookie: csrftoken=$CSRFTOKEN" -d "username=admin&password=admin1234&csrfmiddlewaretoken=$CSRFTOKEN&next=/admin/" -XPOST "http://${DOCKER_HOST_IP}:8000/admin/login/" -c - | grep csrftoken | cut -f 7)
+    echo $CSRFTOKEN_RESP
+
+.. code-block:: bash
+
+    # sessionid cookie
+    SESSIONID=$(curl -H "Cookie: csrftoken=$CSRFTOKEN" -d "username=admin&password=admin1234&csrfmiddlewaretoken=$CSRFTOKEN&next=/admin/" -XPOST "http://${DOCKER_HOST_IP}:8000/admin/login/" -c - | grep sessionid | cut -f 7)
+    echo $SESSIONID
+
+At this point we are able to making all authenticated calls to the APIs. For example you can query as an administrator all the users actually available in the django system:
+
+.. code-block:: bash
+
+    curl -H "Cookie: csrftoken=$CSRFTOKEN_RESP; sessionid=$SESSIONID" -XGET 'http://192.168.99.100:8000/v1/geo/users/?format=json' -v
 
 Fetch the API model
 -------------------
