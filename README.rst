@@ -216,6 +216,80 @@ Add the first superuser for the application:
     
     docker-compose run web python manage.py createsuperuser
 
+Update database settings to Postgresql
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You are going to modify *settings.py* to let you change the database configuration:
+
+.. code-block:: python
+
+    DATABASES = {
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # }
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'HOST': 'db',
+            'PORT': 5432,
+        }
+    }
+
+where the **HOST** is the link to the *docker-compose.yml* database service:
+
+.. code-block:: yml
+
+    db:
+      image: postgres
+
+Secondly we should also add the package *psycopg2* as dependency:
+
+.. code-block:: console
+
+    pip install psycopg2
+    pip freeze > requirements.txt
+
+.. warning:: A trouble with previous versions of Django for migrations can be arised. If you encounter that in the error of such message 'django.db.utils.ProgrammingError: relation "auth_user" does not exist' then accomplish the actions below
+
+In order to build new migrations for the api reusable app you can execute this commands below. Delete the old compiled files *.pyc*:
+
+.. code-block:: console
+
+    rm -rf api/*.pyc
+    rm -rf api/migrations/*.pyc
+
+Build new migrations for the api app:
+
+.. code-block:: python
+
+    python manage.py makemigrations api
+
+After this migrations would be generated again.
+
+Update the container
+""""""""""""""""""""
+
+Once you are ready with the projects then run the container from scratch:
+
+.. code-block:: console
+
+    docker-compose build
+    docker-compose up
+
+Then execute the **migrate** command in the api_tutorial django project inside the container:
+
+.. code-block:: console
+
+    docker-compose run web python manage.py migrate
+
+Finally create a new superuser with the command:
+
+.. code-block:: console
+
+    docker-compose run web python manage.py createsuperuser
+
 Test the api_tutorial application
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
