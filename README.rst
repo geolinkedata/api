@@ -67,8 +67,8 @@ Usage
 
 .. code-block:: console
 
-    mkdir usage
-    django-admin startproject tutorial .
+    mkdir api_tutorial && cd api_tutorial
+    django-admin startproject api_tutorial .
 
 - Install the api application from the repository:
 
@@ -155,7 +155,7 @@ Usage
     
     python manage.py syncdb
 
-- Add api urls to urls.py of the tutorial application:
+- Add api urls to urls.py of the api_tutorial application:
 
 .. code-block:: python
 
@@ -187,9 +187,9 @@ Usage
 
 .. code-block:: console
 
-    gunicorn tutorial.wsgi
+    gunicorn api_tutorial.wsgi
 
-Usage of the tutorial application with docker
+Usage of the api_tutorial application with docker
 ---------------------------------------------
 
 Set up the shell with your docker machine:
@@ -266,7 +266,7 @@ Build new migrations for the api app:
 
     python manage.py makemigrations api
 
-After this migrations would be generated again.
+After this the migrations will be generated again.
 
 Update the container
 """"""""""""""""""""
@@ -275,6 +275,7 @@ Once you are ready with the projects then run the container from scratch:
 
 .. code-block:: console
 
+    docker-compose down
     docker-compose build
     docker-compose up
 

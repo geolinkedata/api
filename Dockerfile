@@ -4,5 +4,6 @@ RUN mkdir /code
 WORKDIR /code
 ADD requirements.txt /code/
 RUN pip install -r requirements.txt
-ADD ./static/ /code/
-ADD ./api_tutorial /code/
+ADD . /code/
+RUN pip install -e .
+WORKDIR /code/api_tutorial

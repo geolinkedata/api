@@ -7,7 +7,7 @@ services:
     # command: python manage.py runserver 0.0.0.0:8000
     command: gunicorn -b 0.0.0.0:8000 api_tutorial.wsgi
     volumes:
-      - .:/code
+      - ./api_tutorial:/code/api_tutorial
     ports:
       - "8000:8000"
     depends_on:
